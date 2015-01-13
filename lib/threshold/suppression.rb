@@ -22,7 +22,7 @@ module Threshold
       validates :sid, :presence => true, :integer => true
 
       validates :track_by, :presence => true, :if => :ip_set?, :inclusion => ['src', 'dst']
-      validates :ip, :presence => true, :if => :track_by_set?, :format => /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))?$/
+      validates :ip, :presence => true, :if => :track_by_set?, :format => /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([1-9]|[1-2][0-9]|3[0-2]))?$/
 
       def track_by_set?(entity)
           entity.track_by
