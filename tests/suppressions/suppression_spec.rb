@@ -18,6 +18,15 @@ describe Threshold::Suppression do
     expect(suppression.to_s).to eq 'suppress gen_id 456, sig_id 123, track by_src, ip 1.2.3.4'
   end
 
+  it 'prints a valid configuration line' do
+    suppression = Threshold::Suppression.new
+    suppression.sid=123
+    suppression.gid=456
+    suppression.track_by='src'
+    suppression.ip='1.2.3.4/20'
+    expect(suppression.to_s).to eq 'suppress gen_id 456, sig_id 123, track by_src, ip 1.2.3.4/20'
+  end
+
   it 'should raise an Invalid Suppression Object Error' do
     suppression = Threshold::Suppression.new
     suppression.sid=123
