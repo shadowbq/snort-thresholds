@@ -8,5 +8,6 @@ group :test do
   gem 'fivemat'
   gem 'rspec', '~> 3.1', :require => 'spec'
   gem 'simplecov', :require => false
+  gem "codeclimate-test-reporter", require: nil
 end
 
