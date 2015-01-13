@@ -2,6 +2,7 @@ require File.join(File.dirname(__FILE__), "../spec_helper.rb")
 
 describe Threshold::Suppression do
 
+#Standard SID and GID test with no additional data
   it 'prints a valid configuration line' do
     suppression = Threshold::Suppression.new
     suppression.sid=123
@@ -9,6 +10,7 @@ describe Threshold::Suppression do
     expect(suppression.to_s).to eq 'suppress gen_id 456, sig_id 123'
   end
 
+#Standard SID GID Track by_src and IP test
   it 'prints a valid configuration line' do
     suppression = Threshold::Suppression.new
     suppression.sid=123
@@ -18,15 +20,68 @@ describe Threshold::Suppression do
     expect(suppression.to_s).to eq 'suppress gen_id 456, sig_id 123, track by_src, ip 1.2.3.4'
   end
 
+#Standard SID GID Track by_dst and IP test
+ it 'prints a valid configuration line' do
+    suppression = Threshold::Suppression.new
+    suppression.sid=123
+    suppression.gid=456
+    suppression.track_by='dst'
+    suppression.ip='1.2.3.4'
+    expect(suppression.to_s).to eq 'suppress gen_id 456, sig_id 123, track by_dst, ip 1.2.3.4'
+  end
+
+ #Standard SID GID Track by_dst and full IP length test
+ it 'prints a valid configuration line' do
+    suppression = Threshold::Suppression.new
+    suppression.sid=123
+    suppression.gid=456
+    suppression.track_by='dst'
+    suppression.ip='100.200.103.114'
+    expect(suppression.to_s).to eq 'suppress gen_id 456, sig_id 123, track by_dst, ip 100.200.103.114'
+  end
+
+#Standard SID GID Track by_src and double digit CIRD IP test
+  it 'prints a valid configuration line' do
+    suppression = Threshold::Suppression.new
+    suppression.sid=123
+    suppression.gid=456
+    suppression.track_by='src'
+    suppression.ip='1.2.3.4/20'
+    expect(suppression.to_s).to eq 'suppress gen_id 456, sig_id 123, track by_src, ip 1.2.3.4/20'
+  end
+
+#Standard SID GID Track by_src and single digit CIRD IP test
+  it 'prints a valid configuration line' do
+    suppression = Threshold::Suppression.new
+    suppression.sid=123
+    suppression.gid=456
+    suppression.track_by='src'
+    suppression.ip='1.2.3.4/8'
+    expect(suppression.to_s).to eq 'suppress gen_id 456, sig_id 123, track by_src, ip 1.2.3.4/8'
+  end
+
+#Test failure if CIDR is too long
+it 'prints a valid configuration line' do
+    suppression = Threshold::Suppression.new
+    suppression.sid=123
+    suppression.gid=456
+    suppression.track_by='src'
+    suppression.ip='1.2.3.4/208'
+    expect { suppression.to_s }.to raise_error(Threshold::InvalidSuppressionObject)
+  end
+
+
+#Test failure of no IP set but Track by_ set
   it 'should raise an Invalid Suppression Object Error' do
     suppression = Threshold::Suppression.new
     suppression.sid=123
     suppression.gid=456
     suppression.track_by='src'
-    suppression.ip='fail'
+    suppression.ip=''
     expect { suppression.to_s }.to raise_error(Threshold::InvalidSuppressionObject)
   end
 
+#Test failure on SID and Track by_ set with no GID or IP set
   it 'should raise an Invalid Suppression Object Error' do
     suppression = Threshold::Suppression.new
     suppression.sid=123
@@ -34,9 +89,67 @@ describe Threshold::Suppression do
     expect { suppression.to_s }.to raise_error(Threshold::InvalidSuppressionObject)
   end
 
+#Test failure on SID set but no GID
     it 'should raise an Invalid Suppression Object Error' do
     suppression = Threshold::Suppression.new
     suppression.sid=123
+    expect { suppression.to_s }.to raise_error(Threshold::InvalidSuppressionObject)
+  end
+
+#Test failure on GID set with no SID
+    it 'should raise an Invalid Suppression Object Error' do
+    suppression = Threshold::Suppression.new
+    suppression.gid=234
+    expect { suppression.to_s }.to raise_error(Threshold::InvalidSuppressionObject)
+  end
+
+#Test failure on too many octects in IP
+  it 'should raise an Invalid Suppression Object Error' do
+    suppression = Threshold::Suppression.new
+    suppression.sid=123
+    suppression.gid=456
+    suppression.track_by='src'
+    suppression.ip='1.2.3.4.5'
+    expect { suppression.to_s }.to raise_error(Threshold::InvalidSuppressionObject)
+  end
+
+#Test failure on invalid IP address
+  it 'should raise an Invalid Suppression Object Error' do
+    suppression = Threshold::Suppression.new
+    suppression.sid=123
+    suppression.gid=456
+    suppression.track_by='src'
+    suppression.ip='100.200.300.400'
+    expect { suppression.to_s }.to raise_error(Threshold::InvalidSuppressionObject)
+  end
+
+#Test failure on invalid CIDR range of 0
+  it 'should raise an Invalid Suppression Object Error' do
+    suppression = Threshold::Suppression.new
+    suppression.sid=123
+    suppression.gid=456
+    suppression.track_by='src'
+    suppression.ip='1.2.3.4/0'
+    expect { suppression.to_s }.to raise_error(Threshold::InvalidSuppressionObject)
+  end
+
+#Test failure if SID contains letters
+it 'prints a valid configuration line' do
+    suppression = Threshold::Suppression.new
+    suppression.sid='123a'
+    suppression.gid=456
+    suppression.track_by='src'
+    suppression.ip='1.2.3.4'
+    expect { suppression.to_s }.to raise_error(Threshold::InvalidSuppressionObject)
+  end
+
+  #Test failure if GID contains letters
+it 'prints a valid configuration line' do
+    suppression = Threshold::Suppression.new
+    suppression.sid=123
+    suppression.gid='456a'
+    suppression.track_by='src'
+    suppression.ip='1.2.3.4'
     expect { suppression.to_s }.to raise_error(Threshold::InvalidSuppressionObject)
   end
 
