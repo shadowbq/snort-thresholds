@@ -133,6 +133,26 @@ it 'prints a valid configuration line' do
     expect { suppression.to_s }.to raise_error(Threshold::InvalidSuppressionObject)
   end
 
+#Test failure if SID contains letters
+it 'prints a valid configuration line' do
+    suppression = Threshold::Suppression.new
+    suppression.sid='123a'
+    suppression.gid=456
+    suppression.track_by='src'
+    suppression.ip='1.2.3.4'
+    expect { suppression.to_s }.to raise_error(Threshold::InvalidSuppressionObject)
+  end
+
+  #Test failure if GID contains letters
+it 'prints a valid configuration line' do
+    suppression = Threshold::Suppression.new
+    suppression.sid=123
+    suppression.gid='456a'
+    suppression.track_by='src'
+    suppression.ip='1.2.3.4'
+    expect { suppression.to_s }.to raise_error(Threshold::InvalidSuppressionObject)
+  end
+
 end
 
 
