@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 
 gem 'veto', '~> 1.0'
+gem 'colored', '~> 1.2'
 
 ## Test Group
 group :test do

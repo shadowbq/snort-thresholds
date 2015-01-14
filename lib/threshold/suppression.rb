@@ -46,15 +46,15 @@ module Threshold
     		end
       else
         if sid == nil then
-            raise InvalidSuppressionObject, 'ERROR: Signature ID (SID) must be set'
+            raise InvalidSuppressionObject, 'ERROR: Signature ID (SID) must be set'.red
           elsif gid == nil then 
-            raise InvalidSuppressionObject, 'ERROR: Generator ID (GID) must be set'
+            raise InvalidSuppressionObject, 'ERROR: Generator ID (GID) must be set'.red
           elsif track_by != nil && ip == nil
-            raise InvalidSuppressionObject, 'ERROR: If you specify a track by you must specify an IP address'
+            raise InvalidSuppressionObject, 'ERROR: If you specify a track by you must specify an IP address'.red
           elsif track_by == nil && ip != nil
-            raise InvalidSuppressionObject, 'ERROR: If you specify an IP address you must specify a track by'
+            raise InvalidSuppressionObject, 'ERROR: If you specify an IP address you must specify a track by'.red
           else
-           raise InvalidSuppressionObject, 'ERROR: Object did not validate'
+           raise InvalidSuppressionObject, 'ERROR: Object did not validate'.red
          end
       end
   	end
