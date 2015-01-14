@@ -15,7 +15,7 @@ describe Threshold::EventFilter do
   end
 
 #Test failure missing sid
-it 'prints a valid configuration line' do
+it 'should raise an Invalid EventFilter Object Error' do
     eventfilter = Threshold::EventFilter.new
     eventfilter.gid=456
     eventfilter.type='limit'
@@ -26,7 +26,7 @@ it 'prints a valid configuration line' do
   end
 
 #Test failure missing gid
-it 'prints a valid configuration line' do
+it 'should raise an Invalid EventFilter Object Error' do
     eventfilter = Threshold::EventFilter.new
     eventfilter.sid=123
     eventfilter.type='limit'
@@ -37,7 +37,7 @@ it 'prints a valid configuration line' do
   end
 
 #Test failure missing type
-it 'prints a valid configuration line' do
+it 'should raise an Invalid EventFilter Object Error' do
     eventfilter = Threshold::EventFilter.new
     eventfilter.sid=123
     eventfilter.gid=456
@@ -48,7 +48,7 @@ it 'prints a valid configuration line' do
   end
 
 #Test failure missing track_by
-it 'prints a valid configuration line' do
+it 'should raise an Invalid EventFilter Object Error' do
     eventfilter = Threshold::EventFilter.new
     eventfilter.sid=123
     eventfilter.gid=456
@@ -59,7 +59,7 @@ it 'prints a valid configuration line' do
   end
 
 #Test failure missing count
-it 'prints a valid configuration line' do
+it 'should raise an Invalid EventFilter Object Error' do
     eventfilter = Threshold::EventFilter.new
     eventfilter.sid=123
     eventfilter.gid=456
@@ -70,7 +70,7 @@ it 'prints a valid configuration line' do
   end
 
 #Test failure missing seconds
-it 'prints a valid configuration line' do
+it 'should raise an Invalid EventFilter Object Error' do
     eventfilter = Threshold::EventFilter.new
     eventfilter.sid=123
     eventfilter.gid=456
@@ -81,7 +81,7 @@ it 'prints a valid configuration line' do
   end
 
 #Test failure invalid sid
-it 'prints a valid configuration line' do
+it 'should raise an Invalid EventFilter Object Error' do
     eventfilter = Threshold::EventFilter.new
     eventfilter.sid='123a'
     eventfilter.gid=456
@@ -93,7 +93,7 @@ it 'prints a valid configuration line' do
   end
 
 #Test failure invalid gid
-it 'prints a valid configuration line' do
+it 'should raise an Invalid EventFilter Object Error' do
     eventfilter = Threshold::EventFilter.new
     eventfilter.sid=123
     eventfilter.gid='456a'
@@ -105,7 +105,7 @@ it 'prints a valid configuration line' do
   end
 
 #Test failure invalid type
-it 'prints a valid configuration line' do
+it 'should raise an Invalid EventFilter Object Error' do
     eventfilter = Threshold::EventFilter.new
     eventfilter.sid=123
     eventfilter.gid=456
@@ -117,7 +117,7 @@ it 'prints a valid configuration line' do
   end
 
 #Test failure invalid track_by
-it 'prints a valid configuration line' do
+it 'should raise an Invalid EventFilter Object Error' do
     eventfilter = Threshold::EventFilter.new
     eventfilter.sid=123
     eventfilter.gid=456
@@ -129,7 +129,7 @@ it 'prints a valid configuration line' do
   end
 
 #Test failure invalid count
-it 'prints a valid configuration line' do
+it 'should raise an Invalid EventFilter Object Error' do
     eventfilter = Threshold::EventFilter.new
     eventfilter.sid=123
     eventfilter.gid=456
@@ -141,7 +141,7 @@ it 'prints a valid configuration line' do
   end
 
 #Test failure invalid seconds
-it 'prints a valid configuration line' do
+it 'should raise an Invalid EventFilter Object Error' do
     eventfilter = Threshold::EventFilter.new
     eventfilter.sid=123
     eventfilter.gid=456
