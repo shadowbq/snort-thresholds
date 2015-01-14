@@ -18,11 +18,16 @@ module Threshold
   class SuppressionValidator
       include Veto.validator
 
+      #validates :comment, :cstring => true
+      validates :comment, :format => /^#.*/
+
       validates :gid, :presence => true, :integer => true
       validates :sid, :presence => true, :integer => true
 
       validates :track_by, :presence => true, :if => :ip_set?, :inclusion => ['src', 'dst']
       validates :ip, :presence => true, :if => :track_by_set?, :format => /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([1-9]|[1-2][0-9]|3[0-2]))?$/
+
+
 
       def track_by_set?(entity)
           entity.track_by
@@ -39,12 +44,24 @@ module Threshold
 
     include Veto.model(SuppressionValidator.new)
 
+    def initialize
+      @comment = "#" # Set comment to a string by default
+    end
+
   	def to_s
       if self.valid?
     		if track_by == nil then
-    		  "suppress gen_id #{@gid}, sig_id #{@sid}"
-    		else  
-    		  "suppress gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, ip #{@ip}"
+          if @comment.length < 2
+    		    "suppress gen_id #{@gid}, sig_id #{@sid}"
+          else
+            "suppress gen_id #{@gid}, sig_id #{@sid} #{@comment}"
+          end  
+    		else
+    		  if @comment.length < 2
+            "suppress gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, ip #{@ip}"
+          else
+            "suppress gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, ip #{@ip} #{@comment}"
+          end  
     		end
       else
         raise InvalidSuppressionObject, 'Object did not validate'

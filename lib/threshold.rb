@@ -4,5 +4,7 @@ require 'veto'
 
 module Threshold
   $:.unshift(File.dirname(__FILE__))
+
+  #require library
   require 'threshold/suppression'
 end
