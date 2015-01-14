@@ -45,7 +45,17 @@ module Threshold
     		  "suppress gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, ip #{@ip}"
     		end
       else
-        raise InvalidSuppressionObject, 'Object did not validate'
+        if sid == nil then
+            raise InvalidSuppressionObject, 'ERROR: Signature ID (SID) must be set'
+          elsif gid == nil then 
+            raise InvalidSuppressionObject, 'ERROR: Generator ID (GID) must be set'
+          elsif track_by != nil && ip == nil
+            raise InvalidSuppressionObject, 'ERROR: If you specify a track by you must specify an IP address'
+          elsif track_by == nil && ip != nil
+            raise InvalidSuppressionObject, 'ERROR: If you specify an IP address you must specify a track by'
+          else
+           raise InvalidSuppressionObject, 'ERROR: Object did not validate'
+         end
       end
   	end
 
