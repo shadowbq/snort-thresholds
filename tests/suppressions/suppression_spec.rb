@@ -61,7 +61,7 @@ describe Threshold::Suppression do
   end
 
 #Test failure if CIDR is too long
-it 'prints a valid configuration line' do
+it 'should raise an Invalid Suppression Object Error' do
     suppression = Threshold::Suppression.new
     suppression.sid=123
     suppression.gid=456
@@ -134,7 +134,7 @@ it 'prints a valid configuration line' do
   end
 
 #Test failure if SID contains letters
-it 'prints a valid configuration line' do
+it 'should raise an Invalid Suppression Object Error' do
     suppression = Threshold::Suppression.new
     suppression.sid='123a'
     suppression.gid=456
@@ -144,7 +144,7 @@ it 'prints a valid configuration line' do
   end
 
   #Test failure if GID contains letters
-it 'prints a valid configuration line' do
+it 'should raise an Invalid Suppression Object Error' do
     suppression = Threshold::Suppression.new
     suppression.sid=123
     suppression.gid='456a'
