@@ -43,9 +43,15 @@ module Threshold
   	attr_accessor :gid, :sid, :track_by, :ip, :comment
 
     include Veto.model(SuppressionValidator.new)
+    include Comparable
 
     def initialize
       @comment = "#" # Set comment to a string by default
+    end
+
+    #Comparable
+    def <=>(anOther)
+      gid <=> anOther.gid
     end
 
   	def to_s

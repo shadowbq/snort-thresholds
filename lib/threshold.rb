@@ -8,4 +8,6 @@ module Threshold
   #require library
   require 'threshold/suppression'
   require 'threshold/event_filter'
+
+  require 'threshold/suppressions'
 end
