@@ -37,6 +37,8 @@ module Threshold
 
   	attr_accessor :gid, :sid, :track_by, :ip, :comment
 
+    include Veto.model(SuppressionValidator.new)
+
   	def to_s
       if self.valid?
     		if track_by == nil then
@@ -48,11 +50,6 @@ module Threshold
         raise InvalidSuppressionObject, 'Object did not validate'
       end
   	end
-
-    def valid?
-      validator = SuppressionValidator.new
-      return validator.valid?(self)
-    end
 
   end
 
