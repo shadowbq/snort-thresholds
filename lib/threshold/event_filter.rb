@@ -73,11 +73,13 @@ module Threshold
 
   	def to_s
       if self.valid? 
-        if @comment.length < 2
-    		  "event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}"
-        else 
-           "event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds} #{@comment}"
-         end
+        if defined?(@comment) 
+          if @comment.length > 1
+      		  "event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds} #{@comment}"
+          end  
+        else
+          "event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}" 
+        end
       else
         raise InvalidEventFilterObject, 'Event Filter did not validate'
       end
