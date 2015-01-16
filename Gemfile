@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 
 gem 'veto', '~> 1.0'
+gem 'jls-grok', '~> 0.11.0'
 
 ## Test Group
 group :test do

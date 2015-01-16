@@ -45,8 +45,9 @@ module Threshold
     include Veto.model(SuppressionValidator.new)
     include Comparable
 
-    def initialize
+    def initialize(line="")
       @comment = "#" # Set comment to a string by default
+      parse unless line.empty?
     end
 
     #Comparable
@@ -73,6 +74,15 @@ module Threshold
         raise InvalidSuppressionObject, 'Object did not validate'
       end
   	end
+
+    private
+
+    def parse
+      ### DO MAGIC!! 
+      #grok-native? 
+    end
+
+
 
   end
 
