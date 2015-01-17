@@ -117,7 +117,7 @@ module Threshold
            end 
          end 
       else
-        raise InvalidEventFilterObject, 'Rate Filter did not validate'
+        raise InvalidRateFilterObject, 'Rate Filter did not validate'
       end
   	end
 

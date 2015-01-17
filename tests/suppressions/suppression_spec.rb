@@ -60,6 +60,17 @@ describe Threshold::Suppression do
     expect(suppression.to_s).to eq 'suppress gen_id 456, sig_id 123, track by_src, ip 1.2.3.4/8'
   end
 
+#Standard SID GID Track by_src and single digit CIRD IP test
+  it 'prints a valid configuration line' do
+    suppression = Threshold::Suppression.new
+    suppression.sid=123
+    suppression.gid=456
+    suppression.track_by='src'
+    suppression.ip='1.2.3.4/8'
+    suppression.comment='# More good lines [smm]'
+    expect(suppression.to_s).to eq 'suppress gen_id 456, sig_id 123, track by_src, ip 1.2.3.4/8 # More good lines [smm]'
+  end
+
 #Test failure if CIDR is too long
 it 'should raise an Invalid Suppression Object Error' do
     suppression = Threshold::Suppression.new

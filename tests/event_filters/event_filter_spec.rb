@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), "../spec_helper.rb")
 describe Threshold::EventFilter do
 
 #Standard working test of all fields
-  it 'prints a valid configuration line' do
+it 'prints a valid configuration line' do
     eventfilter = Threshold::EventFilter.new
     eventfilter.sid=123
     eventfilter.gid=456
@@ -12,7 +12,20 @@ describe Threshold::EventFilter do
     eventfilter.count=10
     eventfilter.seconds=60
     expect(eventfilter.to_s).to eq 'event_filter gen_id 456, sig_id 123, type limit, track by_src, count 10, seconds 60'
-  end
+end
+
+#Standard working test of all fields
+it 'prints a valid configuration line' do
+    eventfilter = Threshold::EventFilter.new
+    eventfilter.sid=123
+    eventfilter.gid=456
+    eventfilter.type='limit'
+    eventfilter.track_by='src'
+    eventfilter.count=10
+    eventfilter.seconds=60
+    eventfilter.comment="# This is a good line [smm]"
+    expect(eventfilter.to_s).to eq 'event_filter gen_id 456, sig_id 123, type limit, track by_src, count 10, seconds 60 # This is a good line [smm]'
+end
 
 #Test failure missing sid
 it 'should raise an Invalid EventFilter Object Error' do
