@@ -12,7 +12,7 @@ describe Threshold::RateFilter do
     ratefilter.new_action = 'drop'
     ratefilter.seconds=60
     ratefilter.timeout=60
-    expect(ratefilter.to_s).to eq 'rate_filter gen_id 456, sig_id 123, track by_src, count 10, new_action drop, seconds 60, timeout 60'
+    expect(ratefilter.to_s).to eq 'rate_filter gen_id 456, sig_id 123, track by_src, count 10, seconds 60, new_action drop, timeout 60'
   end
 
 

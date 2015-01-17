@@ -56,7 +56,11 @@ module Threshold
       validates :track_by, :presence => true, :inclusion => ['src', 'dst']
       validates :count, :presence => true, :integer => true
       validates :seconds, :presence => true, :integer => true
-      
+      validates :comment, :if => :comment_set?, :format => /^#.*/
+
+      def comment_set?(entity)
+          entity.comment
+      end
 
       def track_by_set?(entity)
           entity.track_by
@@ -71,12 +75,12 @@ module Threshold
 
   	attr_accessor :gid, :sid, :type, :track_by, :count, :seconds, :comment
 
+    include Veto.model(EventFilterValidator.new)
+
   	def to_s
       if self.valid? 
         if defined?(@comment) 
-          if @comment.length > 1
-      		  "event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds} #{@comment}"
-          end  
+      		"event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds} #{@comment}"
         else
           "event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}" 
         end
@@ -84,11 +88,6 @@ module Threshold
         raise InvalidEventFilterObject, 'Event Filter did not validate'
       end
   	end
-
-    def valid?
-      validator = EventFilterValidator.new
-      return validator.valid?(self)
-    end
 
   end
 

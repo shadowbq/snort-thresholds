@@ -18,8 +18,7 @@ module Threshold
   class SuppressionValidator
       include Veto.validator
 
-      #validates :comment, :cstring => true
-      validates :comment, :format => /^#.*/
+      validates :comment, :if => :comment_set?, :format => /^#.*/
 
       validates :gid, :presence => true, :integer => true
       validates :sid, :presence => true, :integer => true
@@ -27,7 +26,9 @@ module Threshold
       validates :track_by, :presence => true, :if => :ip_set?, :inclusion => ['src', 'dst']
       validates :ip, :presence => true, :if => :track_by_set?, :format => /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([1-9]|[1-2][0-9]|3[0-2]))?$/
 
-
+      def comment_set?(entity)
+          entity.comment
+      end
 
       def track_by_set?(entity)
           entity.track_by
@@ -46,7 +47,6 @@ module Threshold
     include Comparable
 
     def initialize(line="")
-      @comment = "#" # Set comment to a string by default
       parse unless line.empty?
     end
 
@@ -58,16 +58,16 @@ module Threshold
   	def to_s
       if self.valid?
     		if track_by == nil then
-          if @comment.length < 2
-    		    "suppress gen_id #{@gid}, sig_id #{@sid}"
+          if defined?(@comment)
+    		    "suppress gen_id #{@gid}, sig_id #{@sid} #{@comment}"
           else
-            "suppress gen_id #{@gid}, sig_id #{@sid} #{@comment}"
+            "suppress gen_id #{@gid}, sig_id #{@sid}"
           end  
     		else
-    		  if @comment.length < 2
-            "suppress gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, ip #{@ip}"
-          else
+    		  if defined?(@comment)
             "suppress gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, ip #{@ip} #{@comment}"
+          else
+            "suppress gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, ip #{@ip}"
           end  
     		end
       else

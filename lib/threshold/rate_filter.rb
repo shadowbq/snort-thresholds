@@ -79,6 +79,11 @@ module Threshold
       validates :new_action, :presence => true, :inclusion => ['alert', 'drop', 'pass', 'log', 'sdrop', 'reject']
       validates :timeout, :presence => true, :integer => true
       validates :apply_to, :if => :not_track_by_rule?, :format => /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([1-9]|[1-2][0-9]|3[0-2]))?$/
+      validates :comment, :if => :comment_set?, :format => /^#.*/
+
+      def comment_set?(entity)
+          entity.comment
+      end
 
       def not_track_by_rule?(entity)
         if entity.apply_to == nil
@@ -99,16 +104,16 @@ module Threshold
   	def to_s
       if self.valid? 
          if apply_to == nil then
-           if @comment.length > 1
-            "rate_filter gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}, new_action #{@newaction}, timeout #{@timeout}"
+           if defined?(@comment)
+            "rate_filter gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}, new_action #{@new_action}, timeout #{@timeout} #{@comment}"
            else
-            "rate_filter gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}, new_action #{@newaction}, timeout #{@timeout} #{@comment}"
+            "rate_filter gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}, new_action #{@new_action}, timeout #{@timeout}"
            end  
          else
-           if @comment.length > 1
-            "rate_filter gen_id #{@gid}, sig_id #{@sid}, count #{@count}, seconds #{@seconds}, new_action #{@newaction}, timeout #{@timeout} apply_to #{@apply_to}"
+           if defined?(@comment)
+            "rate_filter gen_id #{@gid}, sig_id #{@sid}, count #{@count}, seconds #{@seconds}, new_action #{@new_action}, timeout #{@timeout} apply_to #{@apply_to} #{@comment}"
            else
-            "rate_filter gen_id #{@gid}, sig_id #{@sid}, count #{@count}, seconds #{@seconds}, new_action #{@newaction}, timeout #{@timeout} apply_to #{@apply_to} #{@comment}"
+            "rate_filter gen_id #{@gid}, sig_id #{@sid}, count #{@count}, seconds #{@seconds}, new_action #{@new_action}, timeout #{@timeout} apply_to #{@apply_to}"
            end 
          end 
       else
