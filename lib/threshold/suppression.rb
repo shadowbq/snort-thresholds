@@ -71,7 +71,7 @@ module Threshold
           end  
     		end
       else
-        raise InvalidSuppressionObject, 'Object did not validate'
+        raise InvalidSuppressionObject, 'Suppression did not validate'
       end
   	end
 
