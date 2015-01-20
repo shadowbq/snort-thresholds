@@ -1,12 +1,12 @@
 require File.join(File.dirname(__FILE__), "../spec_helper.rb")
 
-describe Threshold::Suppressions do
+describe Threshold::Thresholds do
 
-## Pre-build the Suppressions object.. can we do a with object?
+## Pre-build the Thresholds object.. can we do a with object?
 
 #Standard SID and GID test with no additional data
   it 'validates' do
-    suppressions = Threshold::Suppressions.new
+    suppressions = Threshold::Thresholds.new
     a1 = Threshold::Suppression.new
     a1.sid=123
     a1.gid=456
@@ -20,7 +20,7 @@ describe Threshold::Suppressions do
   end
 
   it 'prints a valid configuration line' do
-    suppressions = Threshold::Suppressions.new
+    suppressions = Threshold::Thresholds.new
     a1 = Threshold::Suppression.new
     a1.sid=123
     a1.gid=456
