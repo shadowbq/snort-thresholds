@@ -12,18 +12,24 @@ module Threshold
     # Write changes to the file
     def flush
       raise ReadOnlyThresholdsFile if @readonly
-      ## Did the file change?
-      if locked_filehash == current_filehash
-        file = File.open(@file, 'w') 
-        file.write self.to_s
-        file.close
-      else
-        raise ThresholdAtomicLockFailure, 'The @file state/hash changed before we could flush the file'
-      end
+      file = File.open(@file, 'rb+') 
+      file.flock(File::LOCK_EX)
+      hash = Digest::MD5.file @file
+      file.close
+      file = File.open(@file, 'w+')
+      binding.pry
+      raise ThresholdAtomicLockFailure, 'The @file state/hash changed before we could flush the file' unless stored_hash == hash
+      file.write self.sort.to_s
+      file.close
     end
 
-    # Read in the thresholds.conf file
-    #Kinda sortof not really
+    # Clears current collection and Read in the thresholds.conf file 
+    def loadfile!
+      self.clear
+      loadfile
+    end
+
+    # Append in the thresholds.conf file to current collection
     def loadfile
 
       @file ||= 'tests/samples/suppression.cfg'
@@ -31,6 +37,8 @@ module Threshold
       raise MissingThresholdFile, "Missing threshold.conf" unless (File.file?(@file) and File.exists?(@file))
 
       results = Threshold::Parser.new(@file)
+      @stored_hash= results.filehash
+      #puts stored_hash
       results.caps.each do |result|
          builder = Threshold::Builder.new(result)
          self << builder.build
@@ -78,17 +86,14 @@ module Threshold
       return output
     end
 
-    private
-
-
-
-    def locked_filehash
-      #@locked_filehash
-      11111
+    def stored_hash
+      @stored_hash
     end
 
-    def current_filehash
-      11111
+    private
+
+    def stored_hash=(foo)
+      @stored_hash=foo
     end
 
 

@@ -3,7 +3,7 @@ module Threshold
   #Returns an Array of Grok Captures from the input file matching Threshold Conf standards
   class Parser
 
-    attr_reader :caps
+    attr_reader :caps, :filehash
 
     def initialize(file)
 
@@ -40,11 +40,18 @@ module Threshold
     private 
 
     def loadfile(file)
-        File.open(file).each do |line|
+        # FLOCK this and hash it.. 
+        handler = File.open(file)
+        handler.flock(File::LOCK_EX)
+        handler.each do |line|
           match = @grok.match(line)
           @caps << match.captures if match
         end
+        hash = Digest::MD5.file file
+        handler.close
+        @filehash = hash
     end
 
   end
 end
+
