@@ -9,6 +9,7 @@ module Threshold
 
     attr_accessor :file, :readonly
 
+    # Write changes to the file
     def flush
       raise ReadOnlyThresholdsFile if @readonly
       ## Did the file change?
@@ -21,14 +22,20 @@ module Threshold
       end
     end
 
+    # Read in the thresholds.conf file
     #Kinda sortof not really
     def loadfile
-        raise MissingThresholdFile "Missing threshold.conf" unless (File.file?(@file) and File.exists?(@file))
-        File.readlines(@file) do |line| 
-          # JANKY>>>>
-          threshold = Suppression.new(line)
-          self.push(threshold) 
-        end
+
+      @file ||= 'tests/samples/suppression.cfg'
+
+      raise MissingThresholdFile, "Missing threshold.conf" unless (File.file?(@file) and File.exists?(@file))
+
+      results = Threshold::Parser.new(@file)
+      results.caps.each do |result|
+         builder = Threshold::Builder.new(result)
+         self << builder.build
+      end
+
     end
 
     def valid?
@@ -62,6 +69,9 @@ module Threshold
 
     def to_s
       output = ""
+
+      raise InvalidThresholdsObject, "Container object has unknown objects" unless valid?
+
       self.each do |threshold|
         output << threshold.to_s + "\n"
       end

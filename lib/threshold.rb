@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'forwardable' # Needed by veto
 require 'veto'
+require 'grok-pure'
 
 module Threshold
   $:.unshift(File.dirname(__FILE__))
@@ -10,4 +11,7 @@ module Threshold
   require 'threshold/event_filter'
   require 'threshold/thresholds'
   require 'threshold/rate_filter'
+  require 'threshold/builder'
+  require 'threshold/parser'
+
 end

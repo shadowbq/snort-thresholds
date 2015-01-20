@@ -18,7 +18,7 @@ module Threshold
   class SuppressionValidator
       include Veto.validator
 
-      validates :comment, :if => :comment_set?, :format => /^#.*/
+      validates :comment, :if => :comment_set?, :format => /^\s*?#.*/
 
       validates :gid, :presence => true, :integer => true
       validates :sid, :presence => true, :integer => true
@@ -47,12 +47,23 @@ module Threshold
     include Comparable
 
     def initialize(line="")
-      parse unless line.empty?
+      transform(line) unless line.empty?
     end
 
     #Comparable
     def <=>(anOther)
-      gid <=> anOther.gid
+      #gid <=> anOther.gid
+      c = self.class.to_s <=> anOther.class.to_s
+      if c == 0 then 
+        d = self.gid <=> anOther.gid
+        if d == 0 then
+          self.sid <=> anOther.sid
+        else
+          return d 
+        end  
+      else
+        return c
+      end
     end
 
   	def to_s
@@ -77,9 +88,23 @@ module Threshold
 
     private
 
-    def parse
-      ### DO MAGIC!! 
-      #grok-native? 
+    def transform(result)
+      begin 
+        self.gid = result["GID"].compact.first.to_i
+        self.sid = result["SID"].compact.first.to_i
+        if result.key?("TRACK")
+          self.track_by = result["TRACK"].compact.first.split('_')[1]
+        end
+        if result.key?("IP")
+          self.ip = result["IP"].compact.first
+        end
+        if result.key?("COMMENT")
+          self.comment = result["COMMENT"].compact.first
+        end
+        raise InvalidSuppressionObject unless self.valid?
+      rescue
+        raise InvalidSuppressionObject, 'Failed transformation from parser'
+      end
     end
 
 

@@ -79,7 +79,7 @@ module Threshold
       validates :new_action, :presence => true, :inclusion => ['alert', 'drop', 'pass', 'log', 'sdrop', 'reject']
       validates :timeout, :presence => true, :integer => true
       validates :apply_to, :if => :not_track_by_rule?, :format => /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([1-9]|[1-2][0-9]|3[0-2]))?$/
-      validates :comment, :if => :comment_set?, :format => /^#.*/
+      validates :comment, :if => :comment_set?, :format => /^\s*#.*/
 
       def comment_set?(entity)
           entity.comment
@@ -99,7 +99,12 @@ module Threshold
 
   	attr_accessor :gid, :sid, :track_by, :count, :seconds, :new_action, :timeout, :apply_to, :comment
 
-     include Veto.model(RateFilterValidator.new)
+    include Veto.model(RateFilterValidator.new)
+    include Comparable
+
+    def initialize(line="")
+      transform(line) unless line.empty?
+    end
 
   	def to_s
       if self.valid? 
@@ -121,7 +126,46 @@ module Threshold
       end
   	end
 
+    #Comparable
+    def <=>(anOther)
+      #gid <=> anOther.gid
+      c = self.class.to_s <=> anOther.class.to_s
+      if c == 0 then 
+        d = self.gid <=> anOther.gid
+        if d == 0 then
+          self.sid <=> anOther.sid
+        else
+          return d
+        end   
+      else
+        return c
+      end
+    end
     
+    private 
+
+    def transform(result)
+      begin 
+        self.gid = result["GID"].compact.first.to_i
+        self.sid = result["SID"].compact.first.to_i
+        self.track_by = result["TRACK"].compact.first.split('_')[1]
+
+        self.count = result["COUNT"].compact.first.to_i
+        self.seconds = result["SECONDS"].compact.first.to_i
+        self.timeout = result["TIMEOUT"].compact.first.to_i
+        self.new_action = result["NEW_ACTION"].compact.first
+
+        if result.key("IPCIDR")
+          self.apply_to = result["IPCIDR"].compact.first
+        end
+        if result.key?("COMMENT")
+          self.comment = result["COMMENT"].compact.first
+        end
+        raise InvalidRateFilterObject unless self.valid?
+      rescue
+        raise InvalidRateFilterObject, 'Failed transformation from parser'
+      end
+    end
 
   end
 
