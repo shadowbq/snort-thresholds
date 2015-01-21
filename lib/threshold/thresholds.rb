@@ -2,7 +2,8 @@ module Threshold
 
   class InvalidThresholdsObject < StandardError; end
   class ReadOnlyThresholdFile < StandardError; end
-  class MissingThresholdFile < StandardError; end
+  class NonExistantThresholdFile < StandardError; end
+  class MissingThresholdFileConfiguration < StandardError; end
   class ThresholdAtomicLockFailure < StandardError; end
 
   class Thresholds < Array
@@ -11,16 +12,24 @@ module Threshold
 
     # Write changes to the file
     def flush
-      raise ReadOnlyThresholdsFile if @readonly
-      file = File.open(@file, 'rb+') 
-      file.flock(File::LOCK_EX)
-      hash = Digest::MD5.file @file
-      file.close
-      file = File.open(@file, 'w+')
-      binding.pry
-      raise ThresholdAtomicLockFailure, 'The @file state/hash changed before we could flush the file' unless stored_hash == hash
-      file.write self.sort.to_s
-      file.close
+      begin 
+        valid_existing_file?(@file)
+        raise ReadOnlyThresholdsFile if @readonly
+        hash = current_hash
+        
+        file = File.open(@file, 'w+')
+        raise ThresholdAtomicLockFailure, 'The @file state/hash changed before we could flush the file' unless stored_hash == hash
+        file.write self.sort.to_s
+        file.close
+
+      rescue NonExistantThresholdFile
+        raise ReadOnlyThresholdsFile if @readonly
+
+        file = File.open(@file, 'w')
+        file.write self.sort.to_s
+        file.close
+      end
+      return true 
     end
 
     # Clears current collection and Read in the thresholds.conf file 
@@ -31,11 +40,7 @@ module Threshold
 
     # Append in the thresholds.conf file to current collection
     def loadfile
-      if @file !=nil
-        raise MissingThresholdFile, "Missing threshold.conf" unless (File.file?(@file) and File.exists?(@file))
-      else
-        raise MissingThresholdFile, "Missing threshold.conf"
-      end
+      valid_existing_file?(@file)
 
       results = Threshold::Parser.new(@file)
       @stored_hash= results.filehash
@@ -95,6 +100,23 @@ module Threshold
 
     def stored_hash=(foo)
       @stored_hash=foo
+    end
+
+    def current_hash
+      file = File.open(@file, 'rb+') 
+      file.flock(File::LOCK_EX)
+      hash = Digest::MD5.file @file
+      file.close
+      return hash
+    end
+
+    def valid_existing_file?(file)
+      if file !=nil
+        raise NonExistantThresholdFile, "Missing threshold.conf" unless (File.file?(file) and File.exists?(file))
+      else
+        raise MissingThresholdFileConfiguration, "Missing threshold.conf path. See README for Usage."
+      end
+      return true
     end
 
 
