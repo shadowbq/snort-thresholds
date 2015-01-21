@@ -31,10 +31,11 @@ module Threshold
 
     # Append in the thresholds.conf file to current collection
     def loadfile
-
-      @file ||= 'tests/samples/suppression.cfg'
-
-      raise MissingThresholdFile, "Missing threshold.conf" unless (File.file?(@file) and File.exists?(@file))
+      if @file !=nil
+        raise MissingThresholdFile, "Missing threshold.conf" unless (File.file?(@file) and File.exists?(@file))
+      else
+        raise MissingThresholdFile, "Missing threshold.conf"
+      end
 
       results = Threshold::Parser.new(@file)
       @stored_hash= results.filehash
