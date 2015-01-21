@@ -29,7 +29,8 @@ module Threshold
 
       @grok = Grok.new
       patterns.each {|k,v| @grok.add_pattern(k,v)}
-      @grok.add_patterns_from_file("lib/threshold/patterns/base")
+      custom_path = File.join(File.dirname(File.expand_path(__FILE__)), "patterns/base")
+      @grok.add_patterns_from_file(custom_path)
 
       # Remember to call result["GID"].compact because of the PIPE or below in grok compile
       @grok.compile("^%{SUPPRESSION}|%{EVENTFILTER}|%{RATEFILTER}")

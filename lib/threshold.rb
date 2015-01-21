@@ -2,6 +2,7 @@ require 'rubygems'
 require 'forwardable' # Needed by veto
 require 'veto'
 require 'grok-pure'
+require 'digest'
 
 module Threshold
   $:.unshift(File.dirname(__FILE__))
