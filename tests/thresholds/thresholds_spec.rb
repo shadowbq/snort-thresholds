@@ -99,6 +99,13 @@ describe Threshold::Thresholds do
     expect(thresholds.sort.to_s).to eq "event_filter gen_id 1, sig_id 123, type limit, track by_dst, count 23, seconds 10\nevent_filter gen_id 31, sig_id 23, type limit, track by_src, count 3, seconds 101\nrate_filter gen_id 1, sig_id 122, track by_rule, count 23, seconds 10, new_action alert, timeout 10\nrate_filter gen_id 1, sig_id 123, track by_dst, count 23, seconds 10, new_action alert, timeout 10\nrate_filter gen_id 1, sig_id 222, track by_dst, count 2, seconds 10, new_action drop, timeout 10  # More Comments\nsuppress gen_id 1, sig_id 2\nsuppress gen_id 1, sig_id 3\nsuppress gen_id 1, sig_id 1156   # We don't want this\nsuppress gen_id 1, sig_id 1852\nsuppress gen_id 1, sig_id 7537\nsuppress gen_id 1, sig_id 7567\nsuppress gen_id 1, sig_id 7861\nsuppress gen_id 1, sig_id 9999\nsuppress gen_id 1, sig_id 16008, track by_src, ip 172.16.1.2\nsuppress gen_id 1, sig_id 21556  #Found more stuff dont need\nsuppress gen_id 1, sig_id 24348\nsuppress gen_id 129, sig_id 15, track by_src, ip 172.16.1.2\nsuppress gen_id 138, sig_id 5, track by_src, ip 172.16.1.3\nsuppress gen_id 138, sig_id 5, track by_dst, ip 172.16.1.3\n"
   end
 
+  it 'prints a sorted valid configuration file while skipping comment output' do
+    thresholds = Threshold::Thresholds.new
+    thresholds.file='tests/samples/suppression.cfg'
+    thresholds.loadfile
+    expect(thresholds.sort.to_s(true)).to eq "event_filter gen_id 1, sig_id 123, type limit, track by_dst, count 23, seconds 10\nevent_filter gen_id 31, sig_id 23, type limit, track by_src, count 3, seconds 101\nrate_filter gen_id 1, sig_id 122, track by_rule, count 23, seconds 10, new_action alert, timeout 10\nrate_filter gen_id 1, sig_id 123, track by_dst, count 23, seconds 10, new_action alert, timeout 10\nrate_filter gen_id 1, sig_id 222, track by_dst, count 2, seconds 10, new_action drop, timeout 10\nsuppress gen_id 1, sig_id 2\nsuppress gen_id 1, sig_id 3\nsuppress gen_id 1, sig_id 1156\nsuppress gen_id 1, sig_id 1852\nsuppress gen_id 1, sig_id 7537\nsuppress gen_id 1, sig_id 7567\nsuppress gen_id 1, sig_id 7861\nsuppress gen_id 1, sig_id 9999\nsuppress gen_id 1, sig_id 16008, track by_src, ip 172.16.1.2\nsuppress gen_id 1, sig_id 21556\nsuppress gen_id 1, sig_id 24348\nsuppress gen_id 129, sig_id 15, track by_src, ip 172.16.1.2\nsuppress gen_id 138, sig_id 5, track by_src, ip 172.16.1.3\nsuppress gen_id 138, sig_id 5, track by_dst, ip 172.16.1.3\n"
+  end
+
   it 'prints a valid configuration file' do
     thresholds = Threshold::Thresholds.new
     a1 = Threshold::Suppression.new

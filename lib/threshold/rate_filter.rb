@@ -101,21 +101,23 @@ module Threshold
 
     include Veto.model(RateFilterValidator.new)
     include Comparable
+    include Threshold::Standalone
 
     def initialize(line="")
       transform(line) unless line.empty?
     end
 
-  	def to_s
+  	def to_s(skip = false)
+
       if self.valid? 
          if apply_to == nil then
-           if defined?(@comment)
+           if comment?(skip)
             "rate_filter gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}, new_action #{@new_action}, timeout #{@timeout} #{@comment}"
            else
             "rate_filter gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}, new_action #{@new_action}, timeout #{@timeout}"
            end  
          else
-           if defined?(@comment)
+           if comment?(skip)
             "rate_filter gen_id #{@gid}, sig_id #{@sid}, count #{@count}, seconds #{@seconds}, new_action #{@new_action}, timeout #{@timeout} apply_to #{@apply_to} #{@comment}"
            else
             "rate_filter gen_id #{@gid}, sig_id #{@sid}, count #{@count}, seconds #{@seconds}, new_action #{@new_action}, timeout #{@timeout} apply_to #{@apply_to}"
@@ -125,22 +127,6 @@ module Threshold
         raise InvalidRateFilterObject, 'Rate Filter did not validate'
       end
   	end
-
-    #Comparable
-    def <=>(anOther)
-      #gid <=> anOther.gid
-      c = self.class.to_s <=> anOther.class.to_s
-      if c == 0 then 
-        d = self.gid <=> anOther.gid
-        if d == 0 then
-          self.sid <=> anOther.sid
-        else
-          return d
-        end   
-      else
-        return c
-      end
-    end
     
     private 
 

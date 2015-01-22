@@ -6,6 +6,8 @@ require 'digest'
 
 module Threshold
   $:.unshift(File.dirname(__FILE__))
+  #mixin Library
+  require 'threshold/standalone'
 
   #require library
   require 'threshold/suppression'

@@ -77,14 +77,15 @@ module Threshold
 
     include Veto.model(EventFilterValidator.new)
     include Comparable
+    include Threshold::Standalone
 
     def initialize(line="")
       transform(line) unless line.empty?
     end
 
-  	def to_s
+  	def to_s(skip = false)
       if self.valid? 
-        if defined?(@comment) 
+        if comment?(skip)
       		"event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds} #{@comment}"
         else
           "event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}" 
@@ -93,22 +94,6 @@ module Threshold
         raise InvalidEventFilterObject, 'Event Filter did not validate'
       end
   	end
-
-    #Comparable
-    def <=>(anOther)
-      #gid <=> anOther.gid
-      c = self.class.to_s <=> anOther.class.to_s
-      if c == 0 then 
-        d = self.gid <=> anOther.gid
-        if d == 0 then
-          self.sid <=> anOther.sid
-        else
-          return d
-        end   
-      else
-        return c
-      end
-    end
 
     private
 

@@ -45,37 +45,22 @@ module Threshold
 
     include Veto.model(SuppressionValidator.new)
     include Comparable
+    include Threshold::Standalone
 
     def initialize(line="")
       transform(line) unless line.empty?
     end
 
-    #Comparable
-    def <=>(anOther)
-      #gid <=> anOther.gid
-      c = self.class.to_s <=> anOther.class.to_s
-      if c == 0 then 
-        d = self.gid <=> anOther.gid
-        if d == 0 then
-          self.sid <=> anOther.sid
-        else
-          return d 
-        end  
-      else
-        return c
-      end
-    end
-
-  	def to_s
+  	def to_s(skip = false)
       if self.valid?
     		if track_by == nil then
-          if defined?(@comment)
+          if comment?(skip)
     		    "suppress gen_id #{@gid}, sig_id #{@sid} #{@comment}"
           else
             "suppress gen_id #{@gid}, sig_id #{@sid}"
           end  
     		else
-    		  if defined?(@comment)
+    		  if comment?(skip)
             "suppress gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, ip #{@ip} #{@comment}"
           else
             "suppress gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, ip #{@ip}"

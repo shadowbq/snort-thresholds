@@ -75,13 +75,13 @@ module Threshold
       end
     end
     
-    def to_s
+    def to_s(skip = false)
       output = ""
 
       raise InvalidThresholdsObject, "Container object has unknown objects" unless valid?
 
       self.each do |threshold|
-        output << threshold.to_s + "\n"
+        output << threshold.to_s(skip) + "\n"
       end
       return output
     end
