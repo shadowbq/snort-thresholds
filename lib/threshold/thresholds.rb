@@ -6,9 +6,17 @@ module Threshold
   class MissingThresholdFileConfiguration < StandardError; end
   class ThresholdAtomicLockFailure < StandardError; end
 
-  class Thresholds < Array
+  class Thresholds
+
+    extend Forwardable
 
     attr_accessor :file, :readonly
+
+    def_delegators :@thresholds, :<<, :length, :push, :pop, :first, :last, :<=>, :==, :clear, :[], :[]=, :shift, :unshift, :each ,:sort!
+
+    def initialize(thresholds = [])
+      @thresholds = thresholds
+    end
 
     # Write changes to the file
     def flush
@@ -34,7 +42,7 @@ module Threshold
 
     # Clears current collection and Read in the thresholds.conf file 
     def loadfile!
-      self.clear
+      @thresholds.clear
       loadfile
     end
 
@@ -66,21 +74,7 @@ module Threshold
         return false
       end
     end
-
-    # This should transpose? back to a Thresholds class not return as an Array. (super)
-    def sort
-      raise InvalidThresholdsObject unless valid?
-      new_temp = super
-      temp = Thresholds.new
-      new_temp.each {|item| temp << item}
-      return temp
-    end
-
-    def sort!
-      raise InvalidThresholdsObject unless valid?
-      super
-    end
-
+    
     def to_s
       output = ""
 
@@ -95,6 +89,29 @@ module Threshold
     def stored_hash
       @stored_hash
     end
+    
+    ## Forwardable Corrections:
+    ## Corrected for forwardable due to Core Array returning new Arrays on the methods.
+
+    # Array(@thresholds) Creates a new Array on @threshold.sort so.. direct forwardable delegation fails.
+    def sort
+      Thresholds.new(@thresholds.sort)
+    end
+
+    def reverse
+      Thresholds.new(@thresholds.reverse)
+    end
+
+    #Uniques by default to printable output
+    def uniq(&blk)
+      if block_given? 
+        Thresholds.new(@thresholds.uniq(&blk))
+      else
+        Thresholds.new(@thresholds.uniq{ |lineitem| lineitem.to_s })
+      end   
+    end  
+
+
 
     private
 

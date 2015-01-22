@@ -41,6 +41,36 @@ describe Threshold::Thresholds do
     expect(thresholds.to_s).to eq "suppress gen_id 456, sig_id 123\nsuppress gen_id 444, sig_id 123\n"
   end
 
+  it 'correctly appllys uniq to the class' do
+    thresholds = Threshold::Thresholds.new
+    a1 = Threshold::Suppression.new
+    a1.sid=123
+    a1.gid=456
+
+    thresholds.push(a1)
+    thresholds.push(a1.clone)
+    thresholds.push(a1.clone)
+
+    expect(thresholds.uniq.to_s).to eq "suppress gen_id 456, sig_id 123\n"
+  end
+
+  it 'prints a valid configuration line' do
+    thresholds = Threshold::Thresholds.new
+    a1 = Threshold::Suppression.new
+    a1.sid=123
+    a1.gid=456
+    a2 = a1.clone
+    a2.gid=444
+
+    thresholds.push(a1)
+    thresholds.push(a1.clone)
+    thresholds.push(a2)
+    thresholds.push(a2.clone)
+
+    expect(thresholds.uniq{|t| t.sid}.to_s).to eq "suppress gen_id 456, sig_id 123\n"
+  end
+
+
   it 'prints a valid configuration file' do
     thresholds = Threshold::Thresholds.new
     thresholds.file='tests/samples/suppression.cfg'
