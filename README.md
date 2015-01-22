@@ -12,7 +12,7 @@ It currently supports all standalone snort filters generally found in a threshol
 [![Code Climate](https://codeclimate.com/github/shadowbq/snort-thresholds/badges/gpa.svg)](https://codeclimate.com/github/shadowbq/snort-thresholds) 
 [![Test Coverage](https://codeclimate.com/github/shadowbq/snort-thresholds/badges/coverage.svg)](https://codeclimate.com/github/shadowbq/snort-thresholds)
 
-0.0.3 is a stable release tag. 
+Look at the branch **tags** for current & prior releases. 
 
 ## Installation
 
@@ -43,6 +43,16 @@ This is an example Threshold accessing `/tmp/threshold.conf` for loading, append
  => [#<Threshold::Suppression:0x00000002a87b98 @gid=1, @sid=2>, #<Threshold::Suppression:0x00000002a846c8 @gid=444, @sid=2>, #<Threshold::Suppression:0x00000002a576f0 @gid=124, @sid=45544>] 
 2.1.2 :010 > a.flush
  => true 
+```
+
+Filtering the Threshold Object can be achieved with common Array like methods. (ex. `reject` )
+
+```ruby
+require 'threshold'
+a = Threshold::Thresholds.new
+a.file = '/tmp/threshold.conf'
+a.loadfile
+a = a.reject{|t| t.gid==1}
 ```
 
 ## Contibuting
