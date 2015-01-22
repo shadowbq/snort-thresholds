@@ -12,7 +12,7 @@ module Threshold
 
     attr_accessor :file, :readonly
 
-    def_delegators :@thresholds, :<<, :length, :push, :pop, :first, :last, :<=>, :==, :clear, :[], :[]=, :shift, :unshift, :each ,:sort!
+    def_delegators :@thresholds, :<<, :length, :push, :pop, :first, :last, :<=>, :==, :clear, :[], :[]=, :shift, :unshift, :each, :sort!, :shuffle!, :collect!, :map!, :reject!, :delete_if, :select!, :keep_if, :index, :include?
 
     def initialize(thresholds = [])
       @thresholds = thresholds
@@ -94,12 +94,33 @@ module Threshold
     ## Corrected for forwardable due to Core Array returning new Arrays on the methods.
 
     # Array(@thresholds) Creates a new Array on @threshold.sort so.. direct forwardable delegation fails.
+    
     def sort
       Thresholds.new(@thresholds.sort)
     end
 
     def reverse
       Thresholds.new(@thresholds.reverse)
+    end
+
+    def shuffle
+      Thresholds.new(@thresholds.shuffle)
+    end
+
+    def reject(&blk)
+      if block_given? 
+        Thresholds.new(@thresholds.reject(&blk))
+      else
+        Thresholds.new(@thresholds.reject)
+      end   
+    end
+
+    def select(&blk)
+      if block_given? 
+        Thresholds.new(@thresholds.select(&blk))
+      else
+        Thresholds.new(@thresholds.select)
+      end   
     end
 
     #Uniques by default to printable output
@@ -111,7 +132,11 @@ module Threshold
       end   
     end  
 
+    ## Complex Methods
+    ## &(union), | (intersect), + (concat) 
 
+    ## Should rework to perform to_s before comparison..
+    ## include?, index 
 
     private
 
