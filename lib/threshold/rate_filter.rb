@@ -159,7 +159,7 @@ module Threshold
           self.apply_to = result["IPCIDR"].compact.first
         end
         if result.key?("COMMENT")
-          self.comment = result["COMMENT"].compact.first
+          self.comment = result["COMMENT"].compact.first.chomp
         end
         raise InvalidRateFilterObject unless self.valid?
       rescue

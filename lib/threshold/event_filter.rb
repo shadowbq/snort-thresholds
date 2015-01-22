@@ -121,7 +121,7 @@ module Threshold
         self.count = result["COUNT"].compact.first.to_i
         self.seconds = result["SECONDS"].compact.first.to_i
         if result.key?("COMMENT")
-          self.comment = result["COMMENT"].compact.first
+          self.comment = result["COMMENT"].compact.first.chomp
         end
         raise InvalidEventFilterObject unless self.valid?
       rescue

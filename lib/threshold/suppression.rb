@@ -99,7 +99,7 @@ module Threshold
           self.ip = result["IP"].compact.first
         end
         if result.key?("COMMENT")
-          self.comment = result["COMMENT"].compact.first
+          self.comment = result["COMMENT"].compact.first.chomp
         end
         raise InvalidSuppressionObject unless self.valid?
       rescue
