@@ -62,13 +62,6 @@ module Threshold
           entity.comment
       end
 
-      def track_by_set?(entity)
-          entity.track_by
-      end
-
-      def type_set?(type)
-          entity.type
-      end
   end
 
   class EventFilter 
