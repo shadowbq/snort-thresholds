@@ -128,7 +128,7 @@ module Threshold
       if block_given? 
         Thresholds.new(@thresholds.uniq(&blk))
       else
-        Thresholds.new(@thresholds.uniq{ |lineitem| lineitem.to_s })
+        Thresholds.new(@thresholds.uniq{ |lineitem| lineitem.to_s(true) })
       end   
     end  
 

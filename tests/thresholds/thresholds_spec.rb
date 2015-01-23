@@ -46,10 +46,15 @@ describe Threshold::Thresholds do
     a1 = Threshold::Suppression.new
     a1.sid=123
     a1.gid=456
+    b1 = Threshold::Suppression.new
+    b1.sid=123
+    b1.gid=456
+    b1.comment = "# Comments Found here"
 
     thresholds.push(a1)
     thresholds.push(a1.clone)
     thresholds.push(a1.clone)
+    thresholds.push(b1)
 
     expect(thresholds.uniq.to_s).to eq "suppress gen_id 456, sig_id 123\n"
   end
