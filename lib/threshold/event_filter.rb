@@ -97,6 +97,10 @@ module Threshold
 
     private
 
+    def state
+      [@gid, @sid, @type, @track_by, @count, @seconds]
+    end
+
     def transform(result)
       begin
         self.gid = result["GID"].compact.first.to_i

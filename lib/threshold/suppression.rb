@@ -73,6 +73,11 @@ module Threshold
 
     private
 
+    #State does not track comments
+    def state
+      [@gid, @sid, @track_by, @ip]
+    end
+
     def transform(result)
       begin 
         self.gid = result["GID"].compact.first.to_i

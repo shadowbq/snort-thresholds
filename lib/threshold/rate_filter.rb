@@ -130,6 +130,11 @@ module Threshold
     
     private 
 
+    #State does not track comments
+    def state
+      [@gid, @sid, @track_by, @count, @seconds, @new_action, @timeout, @apply_to]
+    end
+
     def transform(result)
       begin 
         self.gid = result["GID"].compact.first.to_i

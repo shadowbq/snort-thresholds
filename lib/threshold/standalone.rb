@@ -14,6 +14,17 @@ module Threshold
       end
     end
 
+    # Equality Methods
+    def ==(an0ther)
+      an0ther.class == self.class && an0ther.hash == hash
+    end
+
+    alias_method :eql?, :==
+
+    def hash
+      state.hash
+    end
+
     #Comparable
     def <=>(anOther)
       #gid <=> anOther.gid

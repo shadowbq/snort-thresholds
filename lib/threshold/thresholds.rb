@@ -20,11 +20,11 @@ module Threshold
 
     # Write changes to the file
     def flush
+      
       begin 
         valid_existing_file?(@file)
         raise ReadOnlyThresholdsFile if @readonly
         hash = current_hash
-        
         file = File.open(@file, 'w+')
         raise ThresholdAtomicLockFailure, 'The @file state/hash changed before we could flush the file' unless stored_hash == hash
         file.write self.sort.to_s
@@ -32,11 +32,12 @@ module Threshold
 
       rescue NonExistantThresholdFile
         raise ReadOnlyThresholdsFile if @readonly
-
         file = File.open(@file, 'w')
         file.write self.sort.to_s
         file.close
       end
+
+      stored_hash=current_hash
       return true 
     end
 
@@ -60,6 +61,7 @@ module Threshold
 
     end
 
+    # Check if all objects in the Threshold Instance report .valid?
     def valid?
       begin 
         self.each do |threshold| 
@@ -75,6 +77,8 @@ module Threshold
       end
     end
     
+    # Printer
+    # Pass (true) to_s to skip the printing of InternalObjects.comment
     def to_s(skip = false)
       output = ""
 
@@ -86,27 +90,36 @@ module Threshold
       return output
     end
 
+    # The calculated hash of the threshold.conf file at load time.
     def stored_hash
       @stored_hash
     end
     
+    def to_a
+      @thresholds
+    end
+
     ## Forwardable Corrections:
     ## Corrected for forwardable due to Core Array returning new Arrays on the methods.
 
     # Array(@thresholds) Creates a new Array on @threshold.sort so.. direct forwardable delegation fails.
     
+    # Returns a new Threshold Object
     def sort
       Thresholds.new(@thresholds.sort)
     end
 
+    # Returns a new Threshold Object
     def reverse
       Thresholds.new(@thresholds.reverse)
     end
 
+    # Returns a new Threshold Object
     def shuffle
       Thresholds.new(@thresholds.shuffle)
     end
 
+    # Returns a new Threshold Object
     def reject(&blk)
       if block_given? 
         Thresholds.new(@thresholds.reject(&blk))
@@ -115,6 +128,7 @@ module Threshold
       end   
     end
 
+    # Returns a new Threshold Object
     def select(&blk)
       if block_given? 
         Thresholds.new(@thresholds.select(&blk))
@@ -124,6 +138,7 @@ module Threshold
     end
 
     #Uniques by default to printable output
+    # Returns a new Threshold Object
     def uniq(&blk)
       if block_given? 
         Thresholds.new(@thresholds.uniq(&blk))
@@ -132,11 +147,32 @@ module Threshold
       end   
     end  
 
-    ## Complex Methods
-    ## &(union), | (intersect), + (concat) 
+    ## Complex SET Methods
+    ## &(union), | (intersect), + (concat), - (Difference) 
 
-    ## Should rework to perform to_s before comparison..
-    ## include?, index 
+    # + (concat)
+    # Returns a new Threshold Object
+    def +(an0ther)
+      Thresholds.new(@thresholds + an0ther.to_a)
+    end
+
+    # | (intersect)
+    # Returns a new Threshold Object
+    def |(an0ther)
+      Thresholds.new(@thresholds | an0ther.to_a)
+    end
+    
+    # & (union)
+    # Returns a new Threshold Object
+    def &(an0ther)
+      Thresholds.new(@thresholds & an0ther.to_a)
+    end
+
+    # - (Difference) 
+    # Returns a new Threshold Object
+    def -(an0ther)
+      Thresholds.new(@thresholds - an0ther.to_a)
+    end
 
     private
 
