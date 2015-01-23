@@ -1,5 +1,6 @@
 # snort-thresholds
 [![Gem Version](https://badge.fury.io/rb/threshold.png)](http://badge.fury.io/rb/threshold)
+[![Gem](https://img.shields.io/gem/dt/threshold.svg)]()
 
 Threshold is an ORM to map to Snort 2.9.x threshold.conf files.
 
@@ -11,8 +12,9 @@ It currently supports all standalone snort filters generally found in a threshol
 [![Build Status](https://travis-ci.org/shadowbq/snort-thresholds.svg?branch=master)](https://travis-ci.org/shadowbq/snort-thresholds) 
 [![Code Climate](https://codeclimate.com/github/shadowbq/snort-thresholds/badges/gpa.svg)](https://codeclimate.com/github/shadowbq/snort-thresholds) 
 [![Test Coverage](https://codeclimate.com/github/shadowbq/snort-thresholds/badges/coverage.svg)](https://codeclimate.com/github/shadowbq/snort-thresholds)
+[![GitHub tag](https://img.shields.io/github/tag/shadowbq/snort-thresholds.svg)](http://github.com/shadowbq/snort-thresholds)
 
-Look at the branch **tags** for current & prior releases. 
+Stable (travis-ci passing) **tags** are release as **gems**, but are NOT marked as stable-0.1.0 or the like.
 
 ## Installation
 
