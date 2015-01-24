@@ -363,4 +363,24 @@ describe Threshold::Thresholds do
 
   end
 
+  describe "subclass filters" do
+    before(:all) do
+      @thresholds = Threshold::Thresholds.new
+      @thresholds.file='tests/samples/suppression.cfg'
+      @thresholds.loadfile
+    end
+
+    it 'should select properly when using suppression' do
+      expect(@thresholds.suppressions{|t| t.sid==3}.length).to eq 1 
+    end
+
+    it 'should select properly when using event_filters' do
+      expect(@thresholds.event_filters{|t| t.sid==123}.length).to eq 1 
+    end
+
+    it 'should select properly when using rate_filters' do
+      expect(@thresholds.rate_filters{|t| t.sid==123}.length).to eq 1 
+    end
+  end
+
 end

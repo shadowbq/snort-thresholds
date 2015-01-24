@@ -174,6 +174,34 @@ module Threshold
       Thresholds.new(@thresholds - an0ther.to_a)
     end
 
+    # Returns a new Threshold Object with just suppressions
+    def suppressions(&blk)
+      if block_given? 
+        self.suppressions.select(&blk)
+      else
+       Thresholds.new(@thresholds.select{|t| t.class.to_s == "Threshold::Suppression"})
+      end
+    end
+
+    # Returns a new Threshold Object with just event_filters
+    def event_filters(&blk)
+      if block_given? 
+        self.event_filters.select(&blk)
+      else
+        Thresholds.new(@thresholds.select{|t| t.class.to_s == "Threshold::EventFilter"})
+      end
+    end
+
+    # Returns a new Threshold Object with just rate_filters
+    def rate_filters(&blk)
+      if block_given? 
+        self.rate_filters.select(&blk)
+      else
+        Thresholds.new(@thresholds.select{|t| t.class.to_s == "Threshold::RateFilter"})
+      end
+    end
+
+
     private
 
     def stored_hash=(foo)
