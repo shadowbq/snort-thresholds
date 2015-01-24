@@ -25,6 +25,18 @@ module Threshold
       state.hash
     end
 
+    def include?(an0ther)
+      return false unless an0ther.class == self.class
+
+      state.zip(an0ther.state).each{ |item| 
+        if !(item[1].nil?)
+          return false unless item[0] == item[1] 
+        end  
+      }
+
+      return true
+    end  
+
     #Comparable
     def <=>(anOther)
       #gid <=> anOther.gid

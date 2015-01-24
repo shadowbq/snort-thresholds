@@ -128,12 +128,12 @@ module Threshold
       end
   	end
     
-    private 
-
     #State does not track comments
     def state
       [@gid, @sid, @track_by, @count, @seconds, @new_action, @timeout, @apply_to]
     end
+
+    private
 
     def transform(result)
       begin 

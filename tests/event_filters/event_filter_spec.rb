@@ -27,6 +27,40 @@ it 'prints a valid configuration line' do
     expect(eventfilter.to_s).to eq 'event_filter gen_id 456, sig_id 123, type limit, track by_src, count 10, seconds 60 # This is a good line [smm]'
 end
 
+#Standard working test of all fields
+it 'prints a valid configuration line' do
+    eventfilter = Threshold::EventFilter.new
+    eventfilter.sid=123
+    eventfilter.gid=456
+    eventfilter.type='limit'
+    eventfilter.track_by='src'
+    eventfilter.count=10
+    eventfilter.seconds=60
+    eventfilter.comment="# This is a good line [smm]"
+    
+    needle = Threshold::EventFilter.new
+    needle.sid=123
+
+    expect(eventfilter.include?(needle)).to eq true
+end
+
+#Standard working test of all fields
+it 'prints a valid configuration line' do
+    eventfilter = Threshold::EventFilter.new
+    eventfilter.sid=123
+    eventfilter.gid=456
+    eventfilter.type='limit'
+    eventfilter.track_by='src'
+    eventfilter.count=10
+    eventfilter.seconds=60
+    eventfilter.comment="# This is a good line [smm]"
+    
+    needle = Threshold::EventFilter.new
+    needle.gid=222
+
+    expect(eventfilter.include?(needle)).to eq false
+end
+
 #Test failure missing sid
 it 'should raise an Invalid EventFilter Object Error' do
     eventfilter = Threshold::EventFilter.new

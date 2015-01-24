@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'veto', '~> 1.0'
   s.add_dependency 'jls-grok', '~> 0.11.0'
 
+  s.add_development_dependency 'pry'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'fivemat'
   s.add_development_dependency 'rspec', '~> 3.1'

@@ -88,11 +88,11 @@ module Threshold
       end
   	end
 
-    private
-
     def state
       [@gid, @sid, @type, @track_by, @count, @seconds]
     end
+
+    private
 
     def transform(result)
       begin

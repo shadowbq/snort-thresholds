@@ -9,7 +9,7 @@ require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 
 require "threshold"
-
+require 'pry'
 
 
 # Require everything in `spec/support`
