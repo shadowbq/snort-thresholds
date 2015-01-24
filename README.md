@@ -1,6 +1,6 @@
 # snort-thresholds
 [![Gem Version](https://badge.fury.io/rb/threshold.png)](http://badge.fury.io/rb/threshold)
-[![Gem](https://img.shields.io/gem/dt/threshold.svg)]()
+[![Gem](https://img.shields.io/gem/dt/threshold.svg)](http://badge.fury.io/rb/threshold)
 
 Threshold is an ORM to map to Snort 2.9.x threshold.conf files.
 
