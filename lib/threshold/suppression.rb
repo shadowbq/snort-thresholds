@@ -55,13 +55,13 @@ module Threshold
       if self.valid?
     		if track_by == nil then
           if comment?(skip)
-    		    "suppress gen_id #{@gid}, sig_id #{@sid} #{@comment}"
+    		    "suppress gen_id #{@gid}, sig_id #{@sid}#{@comment}"
           else
             "suppress gen_id #{@gid}, sig_id #{@sid}"
           end  
     		else
     		  if comment?(skip)
-            "suppress gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, ip #{@ip} #{@comment}"
+            "suppress gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, ip #{@ip}#{@comment}"
           else
             "suppress gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, ip #{@ip}"
           end  

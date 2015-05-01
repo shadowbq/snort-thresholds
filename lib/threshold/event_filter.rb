@@ -79,7 +79,7 @@ module Threshold
   	def to_s(skip = false)
       if self.valid? 
         if comment?(skip)
-      		"event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds} #{@comment}"
+      		"event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}#{@comment}"
         else
           "event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}" 
         end
