@@ -2,7 +2,7 @@
 # configure a new action to take for a specified time when a given rate is
 # exceeded.  Multiple rate filters can be defined on the same rule, in which case
 # they are evaluated in the order they appear in the configuration file, and the
-# first applicable action is taken.  
+# first applicable action is taken.
 
 # Rate filters are used as standalone commands (outside any rule) and have the
 # following format:
@@ -47,7 +47,7 @@
 #   destination IP address (indicated by track parameter) determined by
 #   <ip-list>.  track by_rule and apply_to may not be used together.  Note that
 #   events are generated during the timeout period, even if the rate falls below
-#   the configured limit.  
+#   the configured limit.
 
 
 # Example - allow a maximum of 100 connection attempts per second from any one
@@ -69,35 +69,35 @@ module Threshold
 
   # Create a Rate Filter validator
   class RateFilterValidator
-      include Veto.validator
+    include Veto.validator
 
-      validates :gid, :presence => true, :integer => true
-      validates :sid, :presence => true, :integer => true
-      validates :track_by, :presence =>true, :inclusion => ['src', 'dst', 'rule']
-      validates :count, :presence => true, :integer => true
-      validates :seconds, :presence => true, :integer => true
-      validates :new_action, :presence => true, :inclusion => ['alert', 'drop', 'pass', 'log', 'sdrop', 'reject']
-      validates :timeout, :presence => true, :integer => true
-      validates :apply_to, :if => :not_track_by_rule?, :format => /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([1-9]|[1-2][0-9]|3[0-2]))?$/
-      validates :comment, :if => :comment_set?, :format => /^\s*#.*/
+    validates :gid, :presence => true, :integer => true
+    validates :sid, :presence => true, :integer => true
+    validates :track_by, :presence =>true, :inclusion => ['src', 'dst', 'rule']
+    validates :count, :presence => true, :integer => true
+    validates :seconds, :presence => true, :integer => true
+    validates :new_action, :presence => true, :inclusion => ['alert', 'drop', 'pass', 'log', 'sdrop', 'reject']
+    validates :timeout, :presence => true, :integer => true
+    validates :apply_to, :if => :not_track_by_rule?, :format => /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([1-9]|[1-2][0-9]|3[0-2]))?$/
+    validates :comment, :if => :comment_set?, :format => /^\s*#.*/
 
-      def comment_set?(entity)
-          entity.comment
-      end
+    def comment_set?(entity)
+      entity.comment
+    end
 
-      def not_track_by_rule?(entity)
-        if entity.apply_to == nil
-          entity.track_by == false
-        else
-          entity.track_by != 'rule'
+    def not_track_by_rule?(entity)
+      if entity.apply_to == nil
+        entity.track_by == false
+      else
+        entity.track_by != 'rule'
       end
     end
 
   end
 
-  class RateFilter 
+  class RateFilter
 
-  	attr_accessor :gid, :sid, :track_by, :count, :seconds, :new_action, :timeout, :apply_to, :comment
+    attr_accessor :gid, :sid, :track_by, :count, :seconds, :new_action, :timeout, :apply_to, :comment
 
     include Veto.model(RateFilterValidator.new)
     include Comparable
@@ -107,27 +107,27 @@ module Threshold
       transform(line) unless line.empty?
     end
 
-  	def to_s(skip = false)
+    def to_s(skip = false)
 
-      if self.valid? 
-         if apply_to == nil then
-           if comment?(skip)
-            "rate_filter gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}, new_action #{@new_action}, timeout #{@timeout}#{@comment}"
-           else
+      if self.valid?
+        if apply_to == nil then
+          if comment?(skip)
+            "rate_filter gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}, new_action #{@new_action}, timeout #{@timeout} #{@comment}"
+          else
             "rate_filter gen_id #{@gid}, sig_id #{@sid}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}, new_action #{@new_action}, timeout #{@timeout}"
-           end  
-         else
-           if comment?(skip)
-            "rate_filter gen_id #{@gid}, sig_id #{@sid}, count #{@count}, seconds #{@seconds}, new_action #{@new_action}, timeout #{@timeout} apply_to #{@apply_to}#{@comment}"
-           else
+          end
+        else
+          if comment?(skip)
+            "rate_filter gen_id #{@gid}, sig_id #{@sid}, count #{@count}, seconds #{@seconds}, new_action #{@new_action}, timeout #{@timeout} apply_to #{@apply_to} #{@comment}"
+          else
             "rate_filter gen_id #{@gid}, sig_id #{@sid}, count #{@count}, seconds #{@seconds}, new_action #{@new_action}, timeout #{@timeout} apply_to #{@apply_to}"
-           end 
-         end 
+          end
+        end
       else
         raise InvalidRateFilterObject, 'Rate Filter did not validate'
       end
-  	end
-    
+    end
+
     #State does not track comments
     def state
       [@gid, @sid, @track_by, @count, @seconds, @new_action, @timeout, @apply_to]
@@ -136,7 +136,7 @@ module Threshold
     private
 
     def transform(result)
-      begin 
+      begin
         self.gid = result["GID"].compact.first.to_i
         self.sid = result["SID"].compact.first.to_i
         self.track_by = result["TRACK"].compact.first.split('_')[1]
@@ -150,7 +150,7 @@ module Threshold
           self.apply_to = result["IPCIDR"].compact.first
         end
         if result.key?("COMMENT")
-          self.comment = result["COMMENT"].compact.first.chomp
+          self.comment = result["COMMENT"].compact.first.strip
         end
         raise InvalidRateFilterObject unless self.valid?
       rescue

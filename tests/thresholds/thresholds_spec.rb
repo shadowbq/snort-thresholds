@@ -79,7 +79,7 @@ describe Threshold::Thresholds do
     thresholds.push(a1.clone)
     thresholds.push(b1)
 
-    expect(thresholds.uniq{|a| a.sid}.to_s).to eq "suppress gen_id 456, sig_id 123\nsuppress gen_id 456, sig_id 333 # Comments Found here\n"
+    expect(thresholds.uniq{|a| a.sid}.to_s).to eq "suppress gen_id 456, sig_id 123\nsuppress gen_id 456, sig_id 333# Comments Found here\n"
   end
 
   it 'prints a valid configuration line' do
@@ -109,29 +109,29 @@ describe Threshold::Thresholds do
     thresholds.push(a2)
 
     thresholds.collect! {|d| d.comment = "# add comments everywhere"; d}
-    
-    expect(thresholds.to_s).to eq "suppress gen_id 456, sig_id 123 # add comments everywhere\nsuppress gen_id 444, sig_id 123 # add comments everywhere\n"
+
+    expect(thresholds.to_s).to eq "suppress gen_id 456, sig_id 123# add comments everywhere\nsuppress gen_id 444, sig_id 123# add comments everywhere\n"
   end
-  
+
   it 'prints a valid configuration file' do
     thresholds = Threshold::Thresholds.new
     thresholds.file='tests/samples/suppression.cfg'
     thresholds.loadfile
-    expect(thresholds.to_s).to eq "suppress gen_id 1, sig_id 2\nsuppress gen_id 1, sig_id 3\nsuppress gen_id 129, sig_id 15, track by_src, ip 172.16.1.2\nsuppress gen_id 138, sig_id 5, track by_src, ip 172.16.1.3\nsuppress gen_id 138, sig_id 5, track by_dst, ip 172.16.1.3\nsuppress gen_id 1, sig_id 16008, track by_src, ip 172.16.1.2\nsuppress gen_id 1, sig_id 1852\nevent_filter gen_id 1, sig_id 123, type limit, track by_dst, count 23, seconds 10\nevent_filter gen_id 31, sig_id 23, type limit, track by_src, count 3, seconds 101\nsuppress gen_id 1, sig_id 21556  #Found more stuff dont need\nsuppress gen_id 1, sig_id 9999\nsuppress gen_id 1, sig_id 7567\nsuppress gen_id 1, sig_id 7861\nsuppress gen_id 1, sig_id 1156   # We don't want this\nsuppress gen_id 1, sig_id 24348\nrate_filter gen_id 1, sig_id 123, track by_dst, count 23, seconds 10, new_action alert, timeout 10\nrate_filter gen_id 1, sig_id 222, track by_dst, count 2, seconds 10, new_action drop, timeout 10  # More Comments\nrate_filter gen_id 1, sig_id 122, track by_rule, count 23, seconds 10, new_action alert, timeout 10\nsuppress gen_id 1, sig_id 7537\n"
+    expect(thresholds.to_s).to eq "suppress gen_id 1, sig_id 2\nsuppress gen_id 1, sig_id 3\nsuppress gen_id 129, sig_id 15, track by_src, ip 172.16.1.2\nsuppress gen_id 138, sig_id 5, track by_src, ip 172.16.1.3\nsuppress gen_id 138, sig_id 5, track by_dst, ip 172.16.1.3\nsuppress gen_id 1, sig_id 16008, track by_src, ip 172.16.1.2\nsuppress gen_id 1, sig_id 1852\nevent_filter gen_id 1, sig_id 123, type limit, track by_dst, count 23, seconds 10\nevent_filter gen_id 31, sig_id 23, type limit, track by_src, count 3, seconds 101\nsuppress gen_id 1, sig_id 21556#Found more stuff dont need\nsuppress gen_id 1, sig_id 9999\nsuppress gen_id 1, sig_id 7567\nsuppress gen_id 1, sig_id 7861\nsuppress gen_id 1, sig_id 1156# We don't want this\nsuppress gen_id 1, sig_id 24348\nrate_filter gen_id 1, sig_id 123, track by_dst, count 23, seconds 10, new_action alert, timeout 10\nrate_filter gen_id 1, sig_id 222, track by_dst, count 2, seconds 10, new_action drop, timeout 10 # More Comments\nrate_filter gen_id 1, sig_id 122, track by_rule, count 23, seconds 10, new_action alert, timeout 10\nsuppress gen_id 1, sig_id 7537\n"
   end
 
   it 'prints a sorted valid configuration file' do
     thresholds = Threshold::Thresholds.new
     thresholds.file='tests/samples/suppression.cfg'
     thresholds.loadfile
-    expect(thresholds.sort.to_s).to eq "event_filter gen_id 1, sig_id 123, type limit, track by_dst, count 23, seconds 10\nevent_filter gen_id 31, sig_id 23, type limit, track by_src, count 3, seconds 101\nrate_filter gen_id 1, sig_id 122, track by_rule, count 23, seconds 10, new_action alert, timeout 10\nrate_filter gen_id 1, sig_id 123, track by_dst, count 23, seconds 10, new_action alert, timeout 10\nrate_filter gen_id 1, sig_id 222, track by_dst, count 2, seconds 10, new_action drop, timeout 10  # More Comments\nsuppress gen_id 1, sig_id 2\nsuppress gen_id 1, sig_id 3\nsuppress gen_id 1, sig_id 1156   # We don't want this\nsuppress gen_id 1, sig_id 1852\nsuppress gen_id 1, sig_id 7537\nsuppress gen_id 1, sig_id 7567\nsuppress gen_id 1, sig_id 7861\nsuppress gen_id 1, sig_id 9999\nsuppress gen_id 1, sig_id 16008, track by_src, ip 172.16.1.2\nsuppress gen_id 1, sig_id 21556  #Found more stuff dont need\nsuppress gen_id 1, sig_id 24348\nsuppress gen_id 129, sig_id 15, track by_src, ip 172.16.1.2\nsuppress gen_id 138, sig_id 5, track by_src, ip 172.16.1.3\nsuppress gen_id 138, sig_id 5, track by_dst, ip 172.16.1.3\n"
+    expect(thresholds.sort.to_s).to eq "event_filter gen_id 1, sig_id 123, type limit, track by_dst, count 23, seconds 10\nevent_filter gen_id 31, sig_id 23, type limit, track by_src, count 3, seconds 101\nrate_filter gen_id 1, sig_id 122, track by_rule, count 23, seconds 10, new_action alert, timeout 10\nrate_filter gen_id 1, sig_id 123, track by_dst, count 23, seconds 10, new_action alert, timeout 10\nrate_filter gen_id 1, sig_id 222, track by_dst, count 2, seconds 10, new_action drop, timeout 10 # More Comments\nsuppress gen_id 1, sig_id 2\nsuppress gen_id 1, sig_id 3\nsuppress gen_id 1, sig_id 1156# We don't want this\nsuppress gen_id 1, sig_id 1852\nsuppress gen_id 1, sig_id 7537\nsuppress gen_id 1, sig_id 7567\nsuppress gen_id 1, sig_id 7861\nsuppress gen_id 1, sig_id 9999\nsuppress gen_id 1, sig_id 16008, track by_src, ip 172.16.1.2\nsuppress gen_id 1, sig_id 21556#Found more stuff dont need\nsuppress gen_id 1, sig_id 24348\nsuppress gen_id 129, sig_id 15, track by_src, ip 172.16.1.2\nsuppress gen_id 138, sig_id 5, track by_src, ip 172.16.1.3\nsuppress gen_id 138, sig_id 5, track by_dst, ip 172.16.1.3\n"
   end
 
   it 'prints a reverse sorted valid configuration file' do
     thresholds = Threshold::Thresholds.new
     thresholds.file='tests/samples/suppression.cfg'
     thresholds.loadfile
-    expect(thresholds.sort.reverse.to_s).to eq "suppress gen_id 138, sig_id 5, track by_dst, ip 172.16.1.3\nsuppress gen_id 138, sig_id 5, track by_src, ip 172.16.1.3\nsuppress gen_id 129, sig_id 15, track by_src, ip 172.16.1.2\nsuppress gen_id 1, sig_id 24348\nsuppress gen_id 1, sig_id 21556  #Found more stuff dont need\nsuppress gen_id 1, sig_id 16008, track by_src, ip 172.16.1.2\nsuppress gen_id 1, sig_id 9999\nsuppress gen_id 1, sig_id 7861\nsuppress gen_id 1, sig_id 7567\nsuppress gen_id 1, sig_id 7537\nsuppress gen_id 1, sig_id 1852\nsuppress gen_id 1, sig_id 1156   # We don't want this\nsuppress gen_id 1, sig_id 3\nsuppress gen_id 1, sig_id 2\nrate_filter gen_id 1, sig_id 222, track by_dst, count 2, seconds 10, new_action drop, timeout 10  # More Comments\nrate_filter gen_id 1, sig_id 123, track by_dst, count 23, seconds 10, new_action alert, timeout 10\nrate_filter gen_id 1, sig_id 122, track by_rule, count 23, seconds 10, new_action alert, timeout 10\nevent_filter gen_id 31, sig_id 23, type limit, track by_src, count 3, seconds 101\nevent_filter gen_id 1, sig_id 123, type limit, track by_dst, count 23, seconds 10\n"
+    expect(thresholds.sort.reverse.to_s).to eq "suppress gen_id 138, sig_id 5, track by_dst, ip 172.16.1.3\nsuppress gen_id 138, sig_id 5, track by_src, ip 172.16.1.3\nsuppress gen_id 129, sig_id 15, track by_src, ip 172.16.1.2\nsuppress gen_id 1, sig_id 24348\nsuppress gen_id 1, sig_id 21556#Found more stuff dont need\nsuppress gen_id 1, sig_id 16008, track by_src, ip 172.16.1.2\nsuppress gen_id 1, sig_id 9999\nsuppress gen_id 1, sig_id 7861\nsuppress gen_id 1, sig_id 7567\nsuppress gen_id 1, sig_id 7537\nsuppress gen_id 1, sig_id 1852\nsuppress gen_id 1, sig_id 1156# We don't want this\nsuppress gen_id 1, sig_id 3\nsuppress gen_id 1, sig_id 2\nrate_filter gen_id 1, sig_id 222, track by_dst, count 2, seconds 10, new_action drop, timeout 10 # More Comments\nrate_filter gen_id 1, sig_id 123, track by_dst, count 23, seconds 10, new_action alert, timeout 10\nrate_filter gen_id 1, sig_id 122, track by_rule, count 23, seconds 10, new_action alert, timeout 10\nevent_filter gen_id 31, sig_id 23, type limit, track by_src, count 3, seconds 101\nevent_filter gen_id 1, sig_id 123, type limit, track by_dst, count 23, seconds 10\n"
   end
 
   it 'prints a sorted valid configuration file while skipping comment output' do
@@ -149,7 +149,7 @@ describe Threshold::Thresholds do
     a1.gid=123
     thresholds.push(a1)
     thresholds.loadfile!
-    expect(thresholds.to_s).to eq "suppress gen_id 1, sig_id 2\nsuppress gen_id 1, sig_id 3\nsuppress gen_id 129, sig_id 15, track by_src, ip 172.16.1.2\nsuppress gen_id 138, sig_id 5, track by_src, ip 172.16.1.3\nsuppress gen_id 138, sig_id 5, track by_dst, ip 172.16.1.3\nsuppress gen_id 1, sig_id 16008, track by_src, ip 172.16.1.2\nsuppress gen_id 1, sig_id 1852\nevent_filter gen_id 1, sig_id 123, type limit, track by_dst, count 23, seconds 10\nevent_filter gen_id 31, sig_id 23, type limit, track by_src, count 3, seconds 101\nsuppress gen_id 1, sig_id 21556  #Found more stuff dont need\nsuppress gen_id 1, sig_id 9999\nsuppress gen_id 1, sig_id 7567\nsuppress gen_id 1, sig_id 7861\nsuppress gen_id 1, sig_id 1156   # We don't want this\nsuppress gen_id 1, sig_id 24348\nrate_filter gen_id 1, sig_id 123, track by_dst, count 23, seconds 10, new_action alert, timeout 10\nrate_filter gen_id 1, sig_id 222, track by_dst, count 2, seconds 10, new_action drop, timeout 10  # More Comments\nrate_filter gen_id 1, sig_id 122, track by_rule, count 23, seconds 10, new_action alert, timeout 10\nsuppress gen_id 1, sig_id 7537\n"
+    expect(thresholds.to_s).to eq "suppress gen_id 1, sig_id 2\nsuppress gen_id 1, sig_id 3\nsuppress gen_id 129, sig_id 15, track by_src, ip 172.16.1.2\nsuppress gen_id 138, sig_id 5, track by_src, ip 172.16.1.3\nsuppress gen_id 138, sig_id 5, track by_dst, ip 172.16.1.3\nsuppress gen_id 1, sig_id 16008, track by_src, ip 172.16.1.2\nsuppress gen_id 1, sig_id 1852\nevent_filter gen_id 1, sig_id 123, type limit, track by_dst, count 23, seconds 10\nevent_filter gen_id 31, sig_id 23, type limit, track by_src, count 3, seconds 101\nsuppress gen_id 1, sig_id 21556#Found more stuff dont need\nsuppress gen_id 1, sig_id 9999\nsuppress gen_id 1, sig_id 7567\nsuppress gen_id 1, sig_id 7861\nsuppress gen_id 1, sig_id 1156# We don't want this\nsuppress gen_id 1, sig_id 24348\nrate_filter gen_id 1, sig_id 123, track by_dst, count 23, seconds 10, new_action alert, timeout 10\nrate_filter gen_id 1, sig_id 222, track by_dst, count 2, seconds 10, new_action drop, timeout 10 # More Comments\nrate_filter gen_id 1, sig_id 122, track by_rule, count 23, seconds 10, new_action alert, timeout 10\nsuppress gen_id 1, sig_id 7537\n"
   end
 
   it 'raises an error due to lack of threshold.conf being defined' do
@@ -250,7 +250,7 @@ describe Threshold::Thresholds do
     it 'invalidates on atomic lock failure, due to file never being loaded but existing' do
       FileUtils.touch(@tmpfile)
       thresholds = Threshold::Thresholds.new
-      
+
       thresholds.file=@tmpfile
       a1 = Threshold::Suppression.new
       a1.sid=123
@@ -271,7 +271,7 @@ describe Threshold::Thresholds do
       thresholds = Threshold::Thresholds.new
       thresholds.file=file.path
       thresholds.loadfile
-      
+
       a1 = Threshold::Suppression.new
       a1.sid=123
       a1.gid=456
@@ -288,7 +288,7 @@ describe Threshold::Thresholds do
     end
 
     after(:each) do
-      FileUtils.rm_r @tmpfile, :force => true 
+      FileUtils.rm_r @tmpfile, :force => true
     end
 
   end
@@ -343,8 +343,8 @@ describe Threshold::Thresholds do
       s.sid=12345
       @t2 << s
     end
-    
-    ## &(union), | (intersect), + (concat), - (Difference) 
+
+    ## &(union), | (intersect), + (concat), - (Difference)
     it 'should be able to union two thresholds' do
       expect((@t2 & @t1).length).to eq 19
     end
@@ -371,15 +371,15 @@ describe Threshold::Thresholds do
     end
 
     it 'should select properly when using suppression' do
-      expect(@thresholds.suppressions{|t| t.sid==3}.length).to eq 1 
+      expect(@thresholds.suppressions{|t| t.sid==3}.length).to eq 1
     end
 
     it 'should select properly when using event_filters' do
-      expect(@thresholds.event_filters{|t| t.sid==123}.length).to eq 1 
+      expect(@thresholds.event_filters{|t| t.sid==123}.length).to eq 1
     end
 
     it 'should select properly when using rate_filters' do
-      expect(@thresholds.rate_filters{|t| t.sid==123}.length).to eq 1 
+      expect(@thresholds.rate_filters{|t| t.sid==123}.length).to eq 1
     end
   end
 

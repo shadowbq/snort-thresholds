@@ -37,7 +37,7 @@ it 'prints a valid configuration line' do
     eventfilter.count=10
     eventfilter.seconds=60
     eventfilter.comment="# This is a good line [smm]"
-    
+
     needle = Threshold::EventFilter.new
     needle.sid=123
 
@@ -54,7 +54,7 @@ it 'prints a valid configuration line' do
     eventfilter.count=10
     eventfilter.seconds=60
     eventfilter.comment="# This is a good line [smm]"
-    
+
     needle = Threshold::EventFilter.new
     needle.gid=222
 

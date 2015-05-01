@@ -43,7 +43,7 @@ describe Threshold::RateFilter do
 
   it 'should raise an Invalid RateFilter Object Error' do
     ratefilter = Threshold::RateFilter.new
-    ratefilter.sid=123    
+    ratefilter.sid=123
     ratefilter.track_by='src'
     ratefilter.count=10
     ratefilter.new_action='drop'

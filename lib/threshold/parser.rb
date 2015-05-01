@@ -1,6 +1,5 @@
 module Threshold
-  
-  #Returns an Array of Grok Captures from the input file matching Threshold Conf standards
+    #Returns an Array of Grok Captures from the input file matching Threshold Conf standards
   class Parser
 
     attr_reader :caps, :filehash
@@ -17,8 +16,7 @@ module Threshold
 
       patterns["SUPPRESSIONOPTIONS"] = ", track %{TRACK}, ip %{IP}"
       patterns["RATEFILTEROPTIONS"] = ", apply_to %{IPCIDR}"
-      
-      patterns["ID"] = '\\d+'
+            patterns["ID"] = '\\d+'
       patterns["ETYPE"] = "limit|threshold|both"
       patterns["COUNT"] = "\\d+"
       patterns["SECONDS"] = "\\d+"
@@ -34,25 +32,23 @@ module Threshold
 
       # Remember to call result["GID"].compact because of the PIPE or below in grok compile
       @grok.compile("^%{SUPPRESSION}|%{EVENTFILTER}|%{RATEFILTER}")
-      
-      loadfile(@file)
+            loadfile(@file)
     end
 
-    private 
+    private
 
     def loadfile(file)
-        # FLOCK this and hash it.. 
-        handler = File.open(file)
-        handler.flock(File::LOCK_EX)
-        handler.each do |line|
-          match = @grok.match(line)
-          @caps << match.captures if match
-        end
-        hash = Digest::MD5.file file
-        handler.close
-        @filehash = hash
+      # FLOCK this and hash it..
+      handler = File.open(file)
+      handler.flock(File::LOCK_EX)
+      handler.each do |line|
+        match = @grok.match(line)
+        @caps << match.captures if match
+      end
+      hash = Digest::MD5.file file
+      handler.close
+      @filehash = hash
     end
 
   end
 end
-

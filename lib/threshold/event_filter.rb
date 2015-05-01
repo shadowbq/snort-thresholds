@@ -48,25 +48,25 @@ module Threshold
 
   # Create an Event Filter validator
   class EventFilterValidator
-      include Veto.validator
+    include Veto.validator
 
-      validates :gid, :presence => true, :integer => true
-      validates :sid, :presence => true, :integer => true
-      validates :type, :presence => true,  :inclusion => ['limit', 'threshold', 'both']
-      validates :track_by, :presence => true, :inclusion => ['src', 'dst']
-      validates :count, :presence => true, :integer => true
-      validates :seconds, :presence => true, :integer => true
-      validates :comment, :if => :comment_set?, :format => /^\s*?#.*/
+    validates :gid, :presence => true, :integer => true
+    validates :sid, :presence => true, :integer => true
+    validates :type, :presence => true,  :inclusion => ['limit', 'threshold', 'both']
+    validates :track_by, :presence => true, :inclusion => ['src', 'dst']
+    validates :count, :presence => true, :integer => true
+    validates :seconds, :presence => true, :integer => true
+    validates :comment, :if => :comment_set?, :format => /^\s*?#.*/
 
-      def comment_set?(entity)
-          entity.comment
-      end
+    def comment_set?(entity)
+      entity.comment
+    end
 
   end
 
-  class EventFilter 
+  class EventFilter
 
-  	attr_accessor :gid, :sid, :type, :track_by, :count, :seconds, :comment
+    attr_accessor :gid, :sid, :type, :track_by, :count, :seconds, :comment
 
     include Veto.model(EventFilterValidator.new)
     include Comparable
@@ -76,17 +76,17 @@ module Threshold
       transform(line) unless line.empty?
     end
 
-  	def to_s(skip = false)
-      if self.valid? 
+    def to_s(skip = false)
+      if self.valid?
         if comment?(skip)
-      		"event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}#{@comment}"
+          "event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds} #{@comment}"
         else
-          "event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}" 
+          "event_filter gen_id #{@gid}, sig_id #{@sid}, type #{@type}, track by_#{@track_by}, count #{@count}, seconds #{@seconds}"
         end
       else
         raise InvalidEventFilterObject, 'Event Filter did not validate'
       end
-  	end
+    end
 
     def state
       [@gid, @sid, @type, @track_by, @count, @seconds]
@@ -103,7 +103,7 @@ module Threshold
         self.count = result["COUNT"].compact.first.to_i
         self.seconds = result["SECONDS"].compact.first.to_i
         if result.key?("COMMENT")
-          self.comment = result["COMMENT"].compact.first.chomp
+          self.comment = result["COMMENT"].compact.first.strip
         end
         raise InvalidEventFilterObject unless self.valid?
       rescue
