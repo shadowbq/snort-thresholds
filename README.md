@@ -1,4 +1,6 @@
 # snort-thresholds
+
+[![Join the chat at https://gitter.im/shadowbq/snort-thresholds](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/shadowbq/snort-thresholds?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Gem Version](https://badge.fury.io/rb/threshold.png)](http://badge.fury.io/rb/threshold)
 [![Gem](https://img.shields.io/gem/dt/threshold.svg)](http://badge.fury.io/rb/threshold)
 
